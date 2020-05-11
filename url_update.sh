@@ -41,7 +41,7 @@ do
 curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" -s -L "https://"$j -o tmp
 if [[ $? -eq 0 ]]
 then
-title=$(cat tmp | head -`cat tmp | grep -n -m 1 "</head>" | awk -F ':' '{print $1}'` | grep "<title>"  | awk -F '</title>' '{print $1}' | awk -F '>' '{print $NF}')
+title=`cat tmp | grep -m 1 "<title>"  | awk -F '</title>' '{print $1}' | awk -F '>' '{print $NF}'`
 rm -rf ./tmp
 if [[ "$title" = "" ]]
 then
