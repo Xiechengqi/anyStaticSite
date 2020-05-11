@@ -1,0 +1,28 @@
+name: url_update
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: bash url_update.sh
+      run: |
+         rm index.html -rf
+         cp index.backup index.html
+         chmod +x url_update.sh
+         ./url_update.sh
+         echo "-------- 成功 ---------------"
+         
+    - name: Deploy to gh-pages branch
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: master
+        FOLDER: .
