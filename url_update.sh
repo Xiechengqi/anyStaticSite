@@ -1,6 +1,9 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 starttime=`date +'%Y-%m-%d %H:%M:%S'`
+
 
 echo "------------ start -------------"
 

@@ -21,8 +21,13 @@ jobs:
         rm index.html -rf
         cp index.backup index.html
         chmod 777 ./*
+        echo "------- 开始执行 url_update.sh --------"
         bash ./url_update.sh
         echo "-------- 成功 ---------------"
+        echo "----------- 打印index.html  ------------------"
+        ls -al ./
+        cat index.html
+        echo "--------- 上面是 index.html ------------"
          
     - name: 'Deploy to gh-pages branch'
       uses: JamesIves/github-pages-deploy-action@releases/v3
