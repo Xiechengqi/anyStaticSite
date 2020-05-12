@@ -6,17 +6,17 @@ echo "------------ start -------------"
 
 wget -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" "https://site.ip138.com/gitee.io" -O gitee.io-ip-search &> /dev/null
 
-cat ./gitee.io-ip-search | grep -o -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | uniq > gitee.io-real-ip
+grep -o -E "([0-9]{1,3}\.){3}[0-9]{1,3}" ./gitee.io-ip-search | uniq > gitee.io-real-ip
 
 echo "----------- execute for loop ------------"
 
 for ip in `cat gitee.io-real-ip`
 do
 wget -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" "https://site.ip138.com/"$ip -O $ip"-url-search" &> /dev/null
-cat $ip"-url-search" | grep '"date"' |awk -F '("/|/")' '{print $2}' > $ip"-real-url"
+grep '"date"' $ip"-url-search" |awk -F '("/|/")' '{print $2}' > $ip"-real-url"
 rm -rf $ip"-url-search"
 
-if [[ `cat $ip"-real-url" | grep "gitee.io" | wc -l` -eq 0 ]];then
+if [[ `grep "gitee.io" $ip"-real-url" | wc -l` -eq 0 ]];then
 rm $ip"-url-search" $ip"-real-url" -rf
 continue
 fi
@@ -41,7 +41,7 @@ do
 curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" -s -L "https://"$j -o tmp
 if [[ $? -eq 0 ]]
 then
-title=`cat tmp | grep -m 1 "<title>"  | awk -F '</title>' '{print $1}' | awk -F '>' '{print $NF}'`
+title=`grep -m 1 "<title>" tmp | awk -F '</title>' '{print $1}' | awk -F '>' '{print $NF}'`
 rm -rf ./tmp
 if [[ "$title" = "" ]]
 then
@@ -60,7 +60,7 @@ echo '  <a href="https://'$j'" target="_blank">
 fi
 done
 
-
+rm gitee.io-real-ip gitee.io-ip-search real-urls -rf
 
 
 endtime=`date +'%Y-%m-%d %H:%M:%S'`
