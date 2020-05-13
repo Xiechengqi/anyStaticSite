@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ux
+set -u
 
 starttime=`date +'%Y-%m-%d %H:%M:%S'`
 
