@@ -46,7 +46,7 @@ done
 rm $ip"-real-url" -rf
 done
 
-cat all-real-url | awk '!a[$0]++' > real-urls 
+awk '!a[$0]++' all-real-url > real-urls 
 rm all-real-url -rf
 
 for j in `cat real-urls`
@@ -54,7 +54,7 @@ do
 curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" -s -L "https://"$j -o tmp
 if [[ $? -eq 0 ]]
 then
-title=$(cat tmp | head -`grep -n -m 1 "</head>" tmp | awk -F ':' '{print $1}'` | grep "<title>"  | awk -F '</title>' '{print $1}' | awk -F '>' '{print $NF}')
+title=$(head -`grep -n -m 1 "</head>" tmp | awk -F ':' '{print $1}'` tmp | grep "<title>"  | awk -F '</title>' '{print $1}' | awk -F '>' '{print $NF}')
 rm -rf ./tmp
 if [[ "$title" = "" ]]
 then
