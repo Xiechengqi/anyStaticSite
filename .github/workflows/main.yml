@@ -1,0 +1,56 @@
+name: url_update
+on:
+  watch:
+    types: started
+  schedule:
+    - cron: '0 21 * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id==github.event.sender.id
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: bash url_update.sh
+      run: |
+        cp backup index.html
+        chmod +x url_update.sh
+        bash url_update.sh
+    - name: set git config 
+      run: |
+        git config --global user.name "Xiechengqi"
+        git config --global user.email "Xiechengqi01@gmail.com"
+    - name: add ssh primary key
+      run: |
+        mkdir /home/runner/.ssh/
+        echo "${{ secrets.SSH_PRIVATE_KEY }}">/home/runner/.ssh/id_rsa 
+        chmod 600 /home/runner/.ssh/id_rsa
+        ssh-keyscan -t rsa "github.com">>/home/runner/.ssh/known_hosts
+        ssh-keyscan -t rsa "gitee.com">>/home/runner/.ssh/known_hosts
+    - name: set logfile
+      run: |
+        git log --pretty=format:"%s from Github Actions at `TZ=UTC-8 date +"%Y-%m-%d %H:%M:%S"`" --date=short -n 1  > commit-message.log
+    - name: deploy to github
+      run: |
+        git clone git@github.com:Xiechengqi/test.git .github_repo
+        cd .github_repo
+        git checkout master
+        cd ../
+        \cp -rf ./* ./.github_repo/
+        cd .github_repo
+        rm -rf commit-message.log
+        git add .
+        git commit -F ../commit-message.log
+        git push --force --quiet "git@github.com:Xiechengqi/test.git" master:master
+    - name: deploy to gitee
+      run: |
+        git clone git@gitee.com:Xiechengqi/test.git .gitee-test
+        cd .gitee-test
+        git checkout master
+        cd ../
+        \cp -rf ./* ./.gitee-test/
+        cd .gitee-test
+        rm commit-message.log -rf
+        git add .
+        git commit -F ../commit-message.log
+        git push --force --quiet "git@gitee.com:Xiechengqi/test.git" master:master

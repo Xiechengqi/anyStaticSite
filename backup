@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="renderer" content="webkit" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>随便来个静态网站</title>
+  <meta name="description" content="静态网站展示" />
+  <meta name="keywords" content="静态, 网站, 前端, 学习, 博客" />
+</head>
+
+<style type="text/css">
+   * {
+    background-color: bisque;
+ }
+  h1 {
+    /* width: 100px; */
+    margin-top: 60px;
+    text-align: center;
+  }
+
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    width: 80vw;
+    margin: 10px auto;
+    justify-content: center;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  article {
+    padding: 10px;
+    margin: 20px;
+    display: flex;
+    border-radius: 10px;
+    background-color: aquamarine;
+  }
+
+  article img {
+    padding: 0px 10px 0px 0px;
+    width: 20px;
+    height: 20px;
+  }
+
+  article:hover {
+    background: gray;
+  }
+</style>
+
+
+
+  <h1>随便来个静态网站</h1>
+
+  <div class="content">
