@@ -32,7 +32,7 @@ jobs:
         git log --pretty=format:"%s from Github Actions at `TZ=UTC-8 date +"%Y-%m-%d %H:%M:%S"`" --date=short -n 1  > commit-message.log
     - name: deploy to github
       run: |
-        git clone git@github.com:Xiechengqi/test.git .github_repo
+        git clone git@github.com:Xiechengqi/anyStaticSite.git .github_repo
         cd .github_repo
         git checkout master
         cd ../
@@ -41,16 +41,16 @@ jobs:
         rm -rf commit-message.log
         git add .
         git commit -F ../commit-message.log
-        git push --force --quiet "git@github.com:Xiechengqi/test.git" master:master
+        git push --force --quiet "git@github.com:Xiechengqi/anyStaticSite.git" master:master
     - name: deploy to gitee
       run: |
-        git clone git@gitee.com:Xiechengqi/test.git .gitee-test
-        cd .gitee-test
-        git checkout master
+        git clone git@gitee.com:Xiechengqi/anyStaticSite.git .gitee-repo
+        cd .gitee-repo
+        git checkout -b master
         cd ../
-        \cp -rf ./* ./.gitee-test/
-        cd .gitee-test
+        \cp -rf ./* ./.gitee-repo/
+        cd .gitee-repo
         rm commit-message.log -rf
         git add .
         git commit -F ../commit-message.log
-        git push --force --quiet "git@gitee.com:Xiechengqi/test.git" master:master
+        git push --force --quiet "git@gitee.com:Xiechengqi/anyStaticSite.git" master:master
