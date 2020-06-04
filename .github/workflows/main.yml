@@ -46,7 +46,7 @@ jobs:
       run: |
         git clone git@gitee.com:Xiechengqi/anyStaticSite.git .gitee-repo
         cd .gitee-repo
-        git checkout -b master
+        git checkout master
         cd ../
         \cp -rf ./* ./.gitee-repo/
         cd .gitee-repo
