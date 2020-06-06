@@ -9,6 +9,9 @@ echo "------------ start -------------"
 wget -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" "https://site.ip138.com/gitee.io" -O gitee.io-ip-search &> /dev/null
 grep -o -E "([0-9]{1,3}\.){3}[0-9]{1,3}" gitee.io-ip-search | uniq > gitee.io-real-ip
 rm -rf gitee.io-ip-search
+wget -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" "https://site.ip138.com/coding-pages.com" -O coding-pages.com-ip-search &> /dev/null
+grep -o -E "([0-9]{1,3}\.){3}[0-9]{1,3}" coding-pages.com-ip-search | uniq > coding-pages.com-real-ip
+rm -rf coding-pages.com-ip-search
 wget -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" "https://site.ip138.com/github.io" -O github.io-ip-search &> /dev/null
 grep -o -E "([0-9]{1,3}\.){3}[0-9]{1,3}" github.io-ip-search | uniq > github.io-real-ip
 rm -rf github.io-ip-search
@@ -41,6 +44,36 @@ fi
 done
 rm $ip"-real-url" -rf
 done
+
+for ip in `cat coding-pages.com-real-ip`
+do
+wget -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" "https://site.ip138.com/"$ip -O $ip"-url-search" &> /dev/null
+if [[ $? -ne 0 ]];then
+rm -rf $ip"-url-search"
+continue
+fi
+grep '"date"' $ip"-url-search" |awk -F '("/|/")' '{print $2}' > $ip"-real-url"
+rm -rf $ip"-url-search"
+if [[ `grep "coding-pages.com" $ip"-real-url" | wc -l` -eq 0 ]];then
+rm $ip"-url-search" $ip"-real-url" -rf
+continue
+fi
+for j in `cat $ip"-real-url"`
+do
+curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3100.0 Safari/537.36" -s --head -L "https://"$j --connect-timeout 3 -o url-head.txt
+if [[ $? -ne 0 ]];then
+continue
+fi
+res=`grep "HTTP" url-head.txt | awk '{printf $2}'`
+> url-head.txt
+if [[ $res -eq 200 ]]
+then
+echo $j >> all-real-url
+fi
+done
+rm $ip"-real-url" -rf
+done
+
 
 for ip in `cat github.io-real-ip`
 do
@@ -94,7 +127,7 @@ echo '  <a href="https://'$j'" target="_blank">
 fi
 done
 
-rm -rf gitee.io-real-ip github.io-real-ip url-head.txt
+rm -rf gitee.io-real-ip coding-pages.com-real-ip github.io-real-ip url-head.txt
 
 endtime=`date +'%Y-%m-%d %H:%M:%S'`
 start_s=`date --date="$starttime" +%s`
